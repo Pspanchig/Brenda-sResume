@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import React, { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   ArrowRight,
@@ -10,15 +10,18 @@ import {
   DraftingCompass,
   GraduationCap,
   HardHat,
+  Menu,
   Mail,
   MapPin,
   MessageCircle,
   ShieldCheck,
   Trophy,
   Users,
+  X,
 } from 'lucide-react'
 import './styles.css'
-import brendaPhoto from './imgs/brenditafeliz.jpeg'
+import brendaPhoto from './imgs/perfil.jpeg'
+import Works from './Works.jsx'
 
 const education = [
   {
@@ -82,27 +85,163 @@ function sendMessage(event) {
   window.location.href = `mailto:brendacalvache5@gmail.com?subject=Contacto desde portafolio&body=${body}`
 }
 
+function useRevealOnScroll(dependency) {
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('.reveal')
+
+    if (!revealItems.length) {
+      return undefined
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+      return undefined
+    }
+
+    const showVisibleItems = () => {
+      revealItems.forEach((item) => {
+        const rect = item.getBoundingClientRect()
+
+        if (rect.top < window.innerHeight * 0.92) {
+          item.classList.add('is-visible')
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.16,
+      }
+    )
+
+    revealItems.forEach((item) => observer.observe(item))
+    window.requestAnimationFrame(showVisibleItems)
+
+    return () => observer.disconnect()
+  }, [dependency])
+}
+
 function App() {
+  const [activeView, setActiveView] = useState(
+    window.location.hash === '#trabajos' ? 'works' : 'resume'
+  )
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  useRevealOnScroll(activeView)
+
+  useEffect(() => {
+    function syncViewFromHash() {
+      setActiveView(window.location.hash === '#trabajos' ? 'works' : 'resume')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    window.addEventListener('hashchange', syncViewFromHash)
+
+    return () => window.removeEventListener('hashchange', syncViewFromHash)
+  }, [])
+
+  function goToResumeSection(sectionId = 'inicio') {
+    setActiveView('resume')
+    setIsSidebarOpen(false)
+    window.history.pushState(null, '', `#${sectionId}`)
+
+    window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    }, 0)
+  }
+
+  function goToWorks() {
+    setActiveView('works')
+    setIsSidebarOpen(false)
+    window.history.pushState(null, '', '#trabajos')
+    window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 0)
+  }
+
   return (
     <main>
+      <div id="inicio"></div>
       <nav className="nav">
         <div className="nav-inner">
-          <a href="#inicio" className="brand">
+          <button
+            className="menu-button"
+            type="button"
+            aria-label="Abrir menu"
+            aria-expanded={isSidebarOpen}
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <Menu size={21} />
+          </button>
+
+          <button
+            type="button"
+            className="brand"
+            onClick={() => goToResumeSection('inicio')}
+          >
             <HardHat size={19} />
             Brenda Calvache
-          </a>
+          </button>
 
           <div className="nav-links">
-            <a href="#perfil">Perfil</a>
-            <a href="#educacion">Educación</a>
-            <a href="#herramientas">Herramientas</a>
-            <a href="#certificaciones">Certificaciones</a>
-            <a href="#contacto">Contacto</a>
+            <button type="button" onClick={() => goToResumeSection('perfil')}>Perfil</button>
+            <button type="button" onClick={() => goToResumeSection('educacion')}>Educación</button>
+            <button type="button" onClick={() => goToResumeSection('herramientas')}>Herramientas</button>
+            <button type="button" onClick={() => goToResumeSection('certificaciones')}>Certificaciones</button>
+            <button type="button" onClick={() => goToResumeSection('contacto')}>Contacto</button>
           </div>
         </div>
       </nav>
 
-      <section id="inicio" className="hero section-shell">
+      <div
+        className={`sidebar-backdrop ${isSidebarOpen ? 'is-open' : ''}`}
+        role="presentation"
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
+      <aside
+        className={`sidebar ${isSidebarOpen ? 'is-open' : ''}`}
+        aria-label="Menu principal"
+      >
+        <div className="sidebar-header">
+          <span>Brenda Calvache</span>
+
+          <button
+            type="button"
+            aria-label="Cerrar menu"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="sidebar-links">
+          {activeView === 'works' ? (
+            <button type="button" onClick={() => goToResumeSection('inicio')}>
+              Perfil
+            </button>
+          ) : (
+            <button type="button" onClick={goToWorks}>
+              Trabajos realizados
+            </button>
+          )}
+        </div>
+      </aside>
+
+      {activeView === 'works' ? (
+        <Works />
+      ) : (
+        <>
+      <section className="hero section-shell">
         <div className="hero-copy reveal">
           <p className="eyebrow">
             <Building2 size={16} />
@@ -212,9 +351,13 @@ function App() {
           </h2>
         </div>
 
-        <div className="steps reveal delay-1">
+        <div className="steps">
           {education.map((item, index) => (
-            <article className="step-card" key={item.name}>
+            <article
+              className="step-card reveal"
+              style={{ '--delay': `${120 + index * 90}ms` }}
+              key={item.name}
+            >
               <span>
                 {String(index + 1).padStart(2, '0')}
               </span>
@@ -229,7 +372,10 @@ function App() {
             </article>
           ))}
 
-          <article className="progress-card">
+          <article
+            className="progress-card reveal"
+            style={{ '--delay': '300ms' }}
+          >
             <div>
               <p>Porcentaje aprobado</p>
               <h3>48.89%</h3>
@@ -282,9 +428,13 @@ function App() {
           </h2>
         </div>
 
-        <div className="certification-list reveal delay-1">
-          {certifications.map((item) => (
-            <article key={item}>
+        <div className="certification-list">
+          {certifications.map((item, index) => (
+            <article
+              className="reveal"
+              style={{ '--delay': `${120 + index * 70}ms` }}
+              key={item}
+            >
               <Award size={18} />
               <p>{item}</p>
             </article>
@@ -303,9 +453,13 @@ function App() {
           </div>
         </div>
 
-        <div className="skill-grid reveal delay-1">
-          {skills.map(({ icon: Icon, title }) => (
-            <article className="skill-card" key={title}>
+        <div className="skill-grid">
+          {skills.map(({ icon: Icon, title }, index) => (
+            <article
+              className="skill-card reveal"
+              style={{ '--delay': `${120 + index * 70}ms` }}
+              key={title}
+            >
               <Icon size={20} />
               <span>{title}</span>
             </article>
@@ -372,6 +526,8 @@ function App() {
           </button>
         </form>
       </section>
+        </>
+      )}
     </main>
   )
 }

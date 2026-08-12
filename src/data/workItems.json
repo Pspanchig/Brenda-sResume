@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Evidencias de proyecto",
+    "category": "Documentos",
+    "type": "PDF",
+    "description": "Archivo de evidencia alojado en Oracle Object Storage.",
+    "url": "https://objectstorage.us-ashburn-1.oraclecloud.com/p/wk18vrkpErNw7vv9xptRvAFInTM2nmSn8-7IBeQchg1UEtFGbi9AyLGEUqZVz3Od/n/idbrado9dhik/b/servicios-bucket/o/uploads/PROCURADURIA-GENERAL-DEL-ESTADO/TICKET/00119/evidencias-4bc61ea0-e3fe-4e09-a289-3f927a201b4c.pdf"
+  },
+  {
+    "title": "Informe tecnico ejemplo",
+    "category": "Informes",
+    "type": "Word",
+    "description": "Reemplaza este enlace por un documento .docx del bucket.",
+    "url": "https://objectstorage.us-ashburn-1.oraclecloud.com/n/tu-namespace/b/tu-bucket/o/informes/informe-tecnico.docx"
+  },
+  {
+    "title": "Modelo o memoria de calculo",
+    "category": "Proyectos",
+    "type": "Archivo",
+    "description": "Entrada de ejemplo para planos, memorias, hojas de calculo o proyectos.",
+    "url": "https://objectstorage.us-ashburn-1.oraclecloud.com/n/tu-namespace/b/tu-bucket/o/proyectos/memoria-calculo.pdf"
+  }
+]
