@@ -18,6 +18,7 @@ import {
   Users,
 } from 'lucide-react'
 import './styles.css'
+import brendaPhoto from './imgs/brenditafeliz.jpeg'
 
 const education = [
   {
@@ -152,8 +153,8 @@ function App() {
         <div className="hero-visual reveal delay-1">
           <div className="photo-card">
             <img
-              src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=85"
-              alt="Planos arquitectónicos y herramientas de ingeniería civil sobre una mesa"
+              src={brendaPhoto}
+              alt="Una Brendita feliz"
             />
           </div>
 
