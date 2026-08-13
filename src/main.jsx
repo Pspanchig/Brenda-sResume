@@ -20,7 +20,7 @@ import {
   X,
 } from 'lucide-react'
 import './styles.css'
-import brendaPhoto from './imgs/perfil.jpeg'
+import brendaPhoto from './imgs/pic.jpeg'
 import Works from './Works.jsx'
 
 const education = [
@@ -54,12 +54,31 @@ const tools = [
 ]
 
 const certifications = [
-  'Participación en el primer concurso de Puentes de Madera 2026A',
-  'Participación en el II Concurso Nacional de Ingeniería de Canales y Puertos, organizado por la Universidad de Cartagena UPCT España',
-  'Curso Marketing UTPL',
-  'Fundamentos Informáticos UTPL',
-  'Curso MATLAB Udemy',
-  'Curso MS Project',
+  {
+    title: 'Participación en el primer concurso de Puentes de Madera 2026A',
+    href: 'https://objectstorage.us-ashburn-1.oraclecloud.com/n/idbrado9dhik/b/demo-bucket/o/pruebas%2FCertificado%20Wooden%20bridge%20competition.pdf',
+  },
+  {
+    title:
+      'Participación en el II Concurso Nacional de Ingeniería de Canales y Puertos, organizado por la Universidad de Cartagena UPCT España',
+    href: 'https://objectstorage.us-ashburn-1.oraclecloud.com/n/idbrado9dhik/b/demo-bucket/o/pruebas%2FCertificado%20II%20Concurso%20Nacional%20de%20Puentes%20Agustin%20de%20Betauncour%20para%20estudiantes%20de%20ingenieria%20canales%20y%20puertos_rotated.pdf',
+  },
+  {
+    title: 'Curso Marketing UTPL',
+    href: 'https://objectstorage.us-ashburn-1.oraclecloud.com/n/idbrado9dhik/b/demo-bucket/o/pruebas%2FCertificado%20curso%20de%20Marketing_rotated.pdf',
+  },
+  {
+    title: 'Fundamentos Informáticos UTPL',
+    href: 'https://objectstorage.us-ashburn-1.oraclecloud.com/n/idbrado9dhik/b/demo-bucket/o/pruebas%2FCertificado%20curso%20de%20fundamentos%20informaticos_rotated.pdf',
+  },
+  {
+    title: 'Curso MATLAB Udemy',
+    href: '',
+  },
+  {
+    title: 'Curso MS Project',
+    href: '',
+  },
 ]
 
 const skills = [
@@ -430,14 +449,17 @@ function App() {
 
         <div className="certification-list">
           {certifications.map((item, index) => (
-            <article
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
               className="reveal"
               style={{ '--delay': `${120 + index * 70}ms` }}
-              key={item}
+              key={item.title}
             >
               <Award size={18} />
-              <p>{item}</p>
-            </article>
+              <p>{item.title}</p>
+            </a>
           ))}
         </div>
       </section>
