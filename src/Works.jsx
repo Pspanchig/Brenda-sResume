@@ -19,12 +19,6 @@ function Works() {
         </p>
 
         <h1>Documentos y proyectos</h1>
-
-        <p>
-          Un espacio para organizar informes, evidencias, memorias, planos y
-          proyectos academicos. La lista se alimenta desde un archivo JSON, asi
-          que puedes actualizarla sin backend.
-        </p>
       </div>
 
       <div className="works-summary reveal is-visible delay-1">
